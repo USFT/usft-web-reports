@@ -1,0 +1,373 @@
+<head>
+    <meta charset="utf-8">
+    <title>FluentReport Browser Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="fluentReportsBrowser.min.js"></script>
+    <style type="text/css" media="screen">
+        #fluentReportsError {
+            background-color: red;
+            color: white;
+            margin: 20px;
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body onload="startReport()">
+<div id="fluentReportsError">
+    <br>
+    If you are seeing this, this means that the <font color="yellow">"fluentReportsBrowser.min.js"</font> file was not copied into this directory to be used.    Please copy this file from the "../generator" directory to use this example.
+    <br><br>
+</div>
+<div id="fluentReport">
+    <iframe id="iframe" width="100%" height="100%" style="display:none"></iframe>
+</div>
+<pre id="results"></pre>
+</body>
+<script type="application/javascript">
+
+    /*** Notes:
+            1. The above fluentReportsError div is used just so that there is a visible reason why this example does not run out of the box without you copying the fluentReportsBrowser.min.js file to this directory.
+            2. You need to copy the fluentReportBrowser.min.js file from the "generator" folder into this folder to run this report.    You only need to serve that file to your clients.  No other JS from fluent reports is needed to render any type of report from fluentReports.
+            3. You need an iframe to SHOW the report for the client, above we give it an id of  "iframe" so we can find it.  You can generate this iframe dynamically if you want, or hard code it in the html like I do.
+            4. Instead of generating a pdf file on disk, we use a blob stream on browsers to output to, and then direct that blob stream to the iframe, so it then shows the pdf.
+            5. Any functions you can run in fluentReports in node.js, can be run on the browser side.
+            6. printReport is the function I use in this example to generate the report, you CAN easily pull the data and/or JSON report info from your server instead of hard coding it here.
+            7. displayReport function is what I use to send the stream of data to the browser.
+            8. You can re-use the same iframe to generate even more reports and show them in the same browser session.   So if you have several different "printReports" function you could call them based on user interaction and settings and they will then overwrite the report in the same iframe with the new report...
+     ***/
+
+
+
+    // This is only used for the example, to make sure people copy the relevant JS to be loaded/served by the JS
+    // YOU MUST have the fluentReportsBrowser.min.js file served to the client to use the report engine
+    if (typeof fluentReports !== "undefined") {
+        hideDiv("fluentReportsError");
+        showDiv("iframe");
+    }
+
+    // This is only used for the example, to make sure people copy the relevant JS to be loaded/served by the JS
+    // YOU MUST have the fluentReportsBrowser.min.js file served to the client to use the report engine
+    function hideDiv(id) {
+        let div = document.getElementById(id)
+        if (div) {
+            div.style.display = "none";
+        }
+    }
+
+    function showDiv(id) {
+        let div = document.getElementById(id)
+        if (div) {
+            div.style.display = "";
+        }
+    }
+
+    function startReport() {
+        if (typeof fluentReports !== "undefined") {
+            hideDiv("fluentReportsError");
+            showDiv("iframe");
+            printReport();
+        } else {
+            console.error("Fluent Reports Browser javascript wasn't loaded")
+        }
+    }
+
+    // This is the function that actually generates a report...
+    function printReport() {
+
+        // This is the data for the report, you can pull this from a server dynamically if you want...
+        const reportData =
+                [
+                {
+		"externalTransactionId" : "6d4b9e15-5c25-49b0-9be9-0cab34c7ef7e",
+		"MonthNum" : 1,
+		"Month" : "January",
+		"Year" : 2024,
+		"SKUIndex" : 52,
+		"ProductName" : "OBDII Y-Connector Cable",
+		"Category" : "Accessory",
+		"UnitPrice" : 19.95,
+		"Quantity" : 1,
+		"Discount" : 0.00,
+		"TotalRetail" : 19.95,
+		"NetSales" : 19.9500,
+		"totalSale" : "130.36"
+	},
+	{
+		"externalTransactionId" : "cb3b280b-e85e-48a2-8921-055b84a78f6c",
+		"MonthNum" : 1,
+		"Month" : "January",
+		"Year" : 2024,
+		"SKUIndex" : 52,
+		"ProductName" : "OBDII Y-Connector Cable",
+		"Category" : "Accessory",
+		"UnitPrice" : 19.95,
+		"Quantity" : 1,
+		"Discount" : 0.00,
+		"TotalRetail" : 19.95,
+		"NetSales" : 19.9500,
+		"totalSale" : "204.36"
+	},
+	{
+		"externalTransactionId" : "2d58b741-f2c9-465a-85fc-031584b32611",
+		"MonthNum" : 1,
+		"Month" : "January",
+		"Year" : 2024,
+		"SKUIndex" : 75,
+		"ProductName" : "OBD-V4 GPS Tracker - Activation",
+		"Category" : "Activation",
+		"UnitPrice" : 0.00,
+		"Quantity" : 1,
+		"Discount" : 0.00,
+		"TotalRetail" : 0.00,
+		"NetSales" : 0.0000,
+		"totalSale" : "49.90"
+	},
+	{
+		"externalTransactionId" : "b478a405-0592-4524-afee-6cb4f272c812",
+		"MonthNum" : 1,
+		"Month" : "January",
+		"Year" : 2024,
+		"SKUIndex" : 36,
+		"ProductName" : "AT-V4 Pro GPS Tracker",
+		"Category" : "GPS Trackers",
+		"UnitPrice" : 0.00,
+		"Quantity" : 1,
+		"Discount" : 1.00,
+		"TotalRetail" : 0.00,
+		"NetSales" : 0.0000,
+		"totalSale" : "93.45"
+	},
+	{
+		"externalTransactionId" : "6d4b9e15-5c25-49b0-9be9-0cab34c7ef7e",
+		"MonthNum" : 1,
+		"Month" : "January",
+		"Year" : 2024,
+		"SKUIndex" : 39,
+		"ProductName" : "QWKV4 GPS Tracker",
+		"Category" : "GPS Trackers",
+		"UnitPrice" : 75.00,
+		"Quantity" : 1,
+		"Discount" : 0.00,
+		"TotalRetail" : 75.00,
+		"NetSales" : 75.0000,
+		"totalSale" : "130.36"
+	},
+	{
+		"externalTransactionId" : "ede0c0e4-b73d-4c61-8122-4a20166557ce",
+		"MonthNum" : 1,
+		"Month" : "January",
+		"Year" : 2024,
+		"SKUIndex" : 62,
+		"ProductName" : "AT-V4+ GPS Tracker",
+		"Category" : "GPS Trackers",
+		"UnitPrice" : 0.00,
+		"Quantity" : 1,
+		"Discount" : 1.00,
+		"TotalRetail" : 0.00,
+		"NetSales" : 0.0000,
+		"totalSale" : "63.85"
+	},
+	{
+		"externalTransactionId" : "cb3b280b-e85e-48a2-8921-055b84a78f6c",
+		"MonthNum" : 1,
+		"Month" : "January",
+		"Year" : 2024,
+		"SKUIndex" : 35,
+		"ProductName" : "OBD-V4 GPS Tracker",
+		"Category" : "GPS Trackers",
+		"UnitPrice" : 149.00,
+		"Quantity" : 1,
+		"Discount" : 0.00,
+		"TotalRetail" : 149.00,
+		"NetSales" : 149.0000,
+		"totalSale" : "204.36"
+	},
+	{
+		"externalTransactionId" : "c8f2af49-6402-45da-b4bb-a22609b9263d",
+		"MonthNum" : 1,
+		"Month" : "January",
+		"Year" : 2024,
+		"SKUIndex" : 65,
+		"ProductName" : "QT-V4 Live GPS Tracker With Magnetic Case",
+		"Category" : "GPS Trackers",
+		"UnitPrice" : 0.00,
+		"Quantity" : 3,
+		"Discount" : 1.00,
+		"TotalRetail" : 0.00,
+		"NetSales" : 0.0000,
+		"totalSale" : "231.38"
+	},
+	{
+		"externalTransactionId" : "9a32945d-233b-4a8f-9919-54ab529613dd",
+		"MonthNum" : 2,
+		"Month" : "February",
+		"Year" : 2024,
+		"SKUIndex" : 36,
+		"ProductName" : "AT-V4 Pro GPS Tracker",
+		"Category" : "GPS Trackers",
+		"UnitPrice" : 199.00,
+		"Quantity" : 1,
+		"Discount" : 0.00,
+		"TotalRetail" : 199.00,
+		"NetSales" : 199.0000,
+		"totalSale" : "247.82"
+	},
+	{
+		"externalTransactionId" : "d9061803-d56d-4603-9a9a-8d42cd75256d",
+		"MonthNum" : 2,
+		"Month" : "February",
+		"Year" : 2024,
+		"SKUIndex" : 36,
+		"ProductName" : "AT-V4 Pro GPS Tracker",
+		"Category" : "GPS Trackers",
+		"UnitPrice" : 0.00,
+		"Quantity" : 2,
+		"Discount" : 1.00,
+		"TotalRetail" : 0.00,
+		"NetSales" : 0.0000,
+		"totalSale" : "135.83"
+	}
+
+                ];
+
+
+        let titleheader = function(rpt){
+            rpt.print("USFT Web Sales", {align: "center", fontSize: 13, fontBold: true})
+            rpt.newLine()
+            
+        }
+        let header = function(rpt){
+            rpt.print("USFT Web Sales", {align: "center", fontSize: 13, fontBold: true})
+            rpt.newLine()
+            
+            
+        }
+        var MonthHeader = function(x, r){
+            x.newLine(2)
+            x.fontBold();
+            x.band([
+                {data: r.Month + ", " + r.Year, width: x.maxX()-68,fontBold: true }
+            ], {x: 0});
+            x.fontNormal();
+            x.band([
+                {data: 'Category', width: 190},
+                {data: 'Items sold', width: 60, align: 3},
+                {data: 'Net sales', width: 200, align: 3}
+            ], {x: 0});  // , font: "AldotheApache"});
+            x.bandLine(1);
+        };
+        const CategoryFooter = function (r,d) {
+            r.band([
+                [d.Category, 190],
+                [r.totals.Quantity, 60, 2],
+                [r.totals.TotalRetail, 200, 3],
+         ]);
+         r.newLine()
+            };
+
+
+        var detail = function(x, r, s){
+            x.band([
+                // {data: r.ProductName, width: 200},
+                {data: r.Category, width: 200},
+                {data: r.Quantity, width: 20, align: 1},
+                {data: r.TotalRetail, width: 150}
+            ], { border: 1, width: 0});
+
+        };
+        const totalFormatter = function(data, callback) {
+            for (const key in data) {
+                if (data.hasOwnProperty(key)) {
+                    if (key === 'Quantity') {
+                        continue;
+                    }
+                    // Simple Stupid Money formatter.  It is fairly dumb.  ;-)
+                    let money = data[key].toString();
+                    const idx = money.indexOf('.');
+                    if (idx === -1) {
+                        money += ".00";
+                    } else if (idx === money.length - 2) {
+                        money += "0";
+                    }
+                    for (let i = 6; i < money.length; i += 4) {
+                        money = money.substring(0, money.length - i) + "," + money.substring(money.length - i);
+                    }
+
+                    data[key] = '$ ' + money;
+
+                }
+            }
+
+            callback(null, data);
+        };
+
+
+
+        let footer = (rpt) => {
+            rpt.newLine()
+            rpt.line(rpt.currentX(), rpt.maxY()-18, rpt.maxX(), rpt.maxY()-18);
+            rpt.pageNumber({text: "Page {0} of {1}", footer: true, align: "right"});
+            rpt.printedAt({text: "Printed At: {0}:{1}{2} {3}", footer: true, align: "left"});
+        }
+
+
+        // We need a stream for the report to be generated to...
+        const pipeStream = new fluentReports.BlobStream();
+
+        // Tell the engine we are saving rendering it to a stream...
+        const rpt = new fluentReports.Report(pipeStream)
+            .margins(70)
+                .autoPrint(false) // Optional
+                .titleheader(titleheader)
+                .pageHeader(header)
+                .pageFooter(footer) // Optional
+                .data( reportData )	// REQUIRED
+                .totalFormatter( totalFormatter ) // Optional
+
+                rpt.groupBy( "Month" )
+                .header(MonthHeader)
+
+                rpt.groupBy( "Category" )
+                .footer(CategoryFooter)
+                .max("Category")
+                .sum('Quantity')
+                .sum('TotalRetail')
+
+
+        // Optional Debug output is always nice (to help you see the structure of the report in the console)
+        rpt.printStructure(true);
+
+
+        console.time("Rendered");
+
+        // This does the MAGIC...  :-)
+        // rpt.render(function(err, stream) {
+        //     console.timeEnd("Rendered");
+        //     displayReport(err, stream);
+        // });
+
+        // You can also just do this below rather than adding the additional code above which outputs to the console how much time it took to render the report
+        rpt.render(displayReport);
+
+    }
+
+
+    function displayReport(err, pipeStream) { // jshint ignore:line
+        if (err) {
+            console.error(err);
+            alert(err);
+        } else {
+            const iFrame = document.getElementById('iframe');
+            if (iFrame) {
+                iFrame.src = pipeStream.toBlobURL('application/pdf');
+            } else {
+                console.error("Unable to find iFrame to show report");
+                alert("Unable to find iFrame to show report");
+            }
+        }
+    }
+
+
+
+</script>

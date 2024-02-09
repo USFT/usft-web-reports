@@ -472,7 +472,7 @@ class CombinedReport{
         const rpt2 = new fluentReports.Report(rpt, ({isSibling: true}))
             .margins(40)
             .autoPrint(false) // Optional
-            .pageHeader(this.header2)
+            // .pageHeader(this.header2)
             .data( reportData )	// REQUIRED
             .totalFormatter( this.totalFormatter ) // Optional
 
@@ -523,11 +523,12 @@ class CombinedReport{
         rpt.render(displayReport);
         return rpt;
     }
-    header = function(rpt){
+    header = function(rpt, data){
         rpt.pageNumber({text: "Page {0} of {1}",  align: "right"});
         rpt.printedAt({text: "Printed {3} At: {0}:{1}{2} ",  align: "left"});
-        rpt.newLine(3)
-        rpt.print("USFT Web Sales by Product", {align: "center", fontSize: 13, fontBold: true})
+        rpt.newLine(2)
+        rpt.print(`USFT Web Sales for ${data.Month}, ${data.Year}`, {align: "center", fontSize: 13, fontBold: true})
+        rpt.newLine(2)
         
     }
 
@@ -537,11 +538,9 @@ class CombinedReport{
         rpt.newLine()
     }
     MonthHeader2 = function(x, r){
+        // x.newLine()
+        x.print("By Category", {align: "center", fontSize: 13, fontBold: true})
         x.newLine(2)
-        x.fontBold();
-        x.band([
-            {data: r.Month + ", " + r.Year, width: x.maxX()-68,fontBold: true }
-        ], {x: 30});
         x.fontNormal();
         x.band([
             {data: 'Category', width: 270},
@@ -568,13 +567,9 @@ class CombinedReport{
     };
     //For Third Report
     MonthHeader3 = function(x, r){
-        x.newLine(5)
+        x.newLine()
         x.print("By Product", {align: "center", fontSize: 13, fontBold: true})
         x.newLine(2)
-        x.fontBold();
-        x.band([
-            {data: r.Month + ", " + r.Year, width: x.maxX()-68,fontBold: true }
-        ], {x: 30});
         x.fontNormal();
         x.band([
             {data: 'Product', width: 270},

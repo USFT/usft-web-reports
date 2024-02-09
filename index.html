@@ -28,15 +28,15 @@
     </div>
     <div class="flex-box">
         <div class="one-third">
-            <form id="reportForm" onsubmit="startReport();return false" class="form-signin full-width text-center">
                 <h1 class="h3 mb-3 font-weight-normal">Select the desired Criteria</h1>
                 <label for="report">Choose a report:</label>
-                <select name="report" id="report" >
+                <select name="report" id="report" onchange="setPickerOptions()"> 
                     <option value="ServiceAgreements">Service Agreements</option>
                     <option value="ByCategory">By Catgory</option>
-                    <option value="mercedes">Mercedes</option>
-                    <option value="audi">Audi</option>
+                    <option value="ByProduct">By Product</option>
+                    <option value="Combined">Category/Product</option>
                 </select>
+            <form id="reportForm" onsubmit="startReport();return false" class="form-signin full-width text-center">
 
                 <div class="dateEntry">
                     <label for="startDate">Enter start date:</label>
@@ -46,6 +46,15 @@
                     <label for="endDate">Enter end date:</label>
                     <input type="date" id="endDate" name="endDate" placeholder="End Date" required>
                 </div>
+
+                <button class="btn btn-lg btn-primary btn-block" type="submit"  >Run Report</button>
+            </form>
+            <form id="combinedReportForm" class="combRep" onsubmit="startReport();return false" class="form-signin full-width text-center">
+                <div id="selMonth" class="monthEntry">
+                    <label for="reportMonth">Select Month:</label>
+                    <input type="month" id="reportMonth" name="reportMonth" placeholder="Start Date" required>
+                </div>
+
                 <button class="btn btn-lg btn-primary btn-block" type="submit"  >Run Report</button>
             </form>
 

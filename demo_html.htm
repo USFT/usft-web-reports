@@ -2,7 +2,8 @@
     <meta charset="utf-8">
     <title>FluentReport Browser Test</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="fluentReportsBrowser.min.js"></script>
+    <script src="fluentReportsBrowser.js"></script>
+    <!-- <script src="fluentReportsBrowser.min.js"></script> -->
     <style type="text/css" media="screen">
         #fluentReportsError {
             background-color: red;
@@ -197,80 +198,72 @@
 		"TotalRetail" : 0.00,
 		"NetSales" : 0.0000,
 		"totalSale" : "231.38"
-	},
-	{
-		"externalTransactionId" : "9a32945d-233b-4a8f-9919-54ab529613dd",
-		"MonthNum" : 2,
-		"Month" : "February",
-		"Year" : 2024,
-		"SKUIndex" : 36,
-		"ProductName" : "AT-V4 Pro GPS Tracker",
-		"Category" : "GPS Trackers",
-		"UnitPrice" : 199.00,
-		"Quantity" : 1,
-		"Discount" : 0.00,
-		"TotalRetail" : 199.00,
-		"NetSales" : 199.0000,
-		"totalSale" : "247.82"
-	},
-	{
-		"externalTransactionId" : "d9061803-d56d-4603-9a9a-8d42cd75256d",
-		"MonthNum" : 2,
-		"Month" : "February",
-		"Year" : 2024,
-		"SKUIndex" : 36,
-		"ProductName" : "AT-V4 Pro GPS Tracker",
-		"Category" : "GPS Trackers",
-		"UnitPrice" : 0.00,
-		"Quantity" : 2,
-		"Discount" : 1.00,
-		"TotalRetail" : 0.00,
-		"NetSales" : 0.0000,
-		"totalSale" : "135.83"
 	}
-
                 ];
 
 
-        let titleheader = function(rpt){
+        // let titleheader = function(rpt){
+        //     rpt.print("USFT Web Sales by Product", {align: "center", fontSize: 13, fontBold: true})
+        //     rpt.newLine()
+            
+        // }
+        header = function(rpt){
+            rpt.pageNumber({text: "Page {0} of {1}",  align: "right"});
+            rpt.printedAt({text: "Printed {3} At: {0}:{1}{2} ",  align: "left"});
+            rpt.newLine(2)
             rpt.print("USFT Web Sales", {align: "center", fontSize: 13, fontBold: true})
-            rpt.newLine()
-            
+            rpt.newLine(2)
         }
-        let header = function(rpt){
-            rpt.print("USFT Web Sales", {align: "center", fontSize: 13, fontBold: true})
+    
+
+
+
+        let header3 = function(rpt){
+            rpt.print("By Product", {align: "center", fontSize: 13, fontBold: true})
             rpt.newLine()
-            
-            
         }
-        var MonthHeader = function(x, r){
+        var MonthHeader3 = function(x, r){
+            x.newLine(5)
+            x.print("By Product", {align: "center", fontSize: 13, fontBold: true})
             x.newLine(2)
             x.fontBold();
             x.band([
                 {data: r.Month + ", " + r.Year, width: x.maxX()-68,fontBold: true }
-            ], {x: 0});
+            ], {x: 30});
             x.fontNormal();
             x.band([
-                {data: 'Category', width: 190},
-                {data: 'Items sold', width: 60, align: 3},
-                {data: 'Net sales', width: 200, align: 3}
-            ], {x: 0});  // , font: "AldotheApache"});
+                {data: 'Product', width: 270},
+                {data: 'Items sold', width: 45, align: 3},
+                {data: 'Net sales', width: 155, align: 3}
+            ], {x: 30});  // , font: "AldotheApache"});
             x.bandLine(1);
         };
-        const CategoryFooter = function (r,d) {
-            r.band([
-                [d.Category, 190],
-                [r.totals.Quantity, 60, 2],
-                [r.totals.TotalRetail, 200, 3],
-         ]);
-         r.newLine()
-            };
+        let MonthFooter3 = function (r,d) {
+            r.bandLine(1);
 
+            r.band([
+                // [d.Category, 270],
+                // ["Total items:  " + r.totals.Quantity, 315, 3],
+                // ["Total sales:  " + r.totals.TotalRetail, 155, 3],
+                {data: "Total items:  " + r.totals.Quantity, width: 315, align: 3},
+                {data: "Total sales:  " + r.totals.TotalRetail, width: 155, align: 3},
+            ], {x: 30});
+            r.newLine()
+        };
+
+        const CategoryFooter3 = function (r,d) {
+            r.band([
+                [d.ProductName, 270],
+                [r.totals.Quantity, 45, 3],
+                [r.totals.TotalRetail, 155, 3],
+            ], {x: 30});
+            r.newLine()
+        };
 
         var detail = function(x, r, s){
             x.band([
                 // {data: r.ProductName, width: 200},
-                {data: r.Category, width: 200},
+                {data: r.ProductName, width: 200},
                 {data: r.Quantity, width: 20, align: 1},
                 {data: r.TotalRetail, width: 150}
             ], { border: 1, width: 0});
@@ -311,29 +304,104 @@
             rpt.printedAt({text: "Printed At: {0}:{1}{2} {3}", footer: true, align: "left"});
         }
 
+        //FOR SECOND REPORT
+        let header2 = function(rpt){
+            rpt.print("By Category", {align: "center", fontSize: 13, fontBold: true})
+            rpt.newLine()
+        }
+        let MonthHeader2 = function(x, r){
+            x.newLine(2)
+            x.fontBold();
+            x.band([
+                {data: r.Month + ", " + r.Year, width: x.maxX()-68,fontBold: true }
+            ], {x: 30});
+            x.fontNormal();
+            x.band([
+                {data: 'Category', width: 270},
+                {data: 'Items soldggg', width: 45, align: 3},
+                {data: 'Net sales', width: 155, align: 3}
+            ], {x: 30});  // , font: "AldotheApache"});
+            x.bandLine(1);
+        };
+        let MonthFooter2 = function (r,d) {
+            r.bandLine(1);
+
+            r.band([
+                // [d.Category, 270],
+                // ["Total items:  " + r.totals.Quantity, 315, 3],
+                // ["Total sales:  " + r.totals.TotalRetail, 155, 3],
+                {data: "Total items:  " + r.totals.Quantity, width: 315, align: 3},
+                {data: "Total sales:  " + r.totals.TotalRetail, width: 155, align: 3},
+            ], {x: 30});
+            r.newLine()
+        };
+
+        const CategoryFooter2 = function (r,d) {
+        r.band([
+            [d.Category, 270],
+            [r.totals.Quantity, 45, 3],
+            [r.totals.TotalRetail, 155, 3],
+        ], {x: 30});
+        r.newLine()
+        };
+
+
+
+
 
         // We need a stream for the report to be generated to...
         const pipeStream = new fluentReports.BlobStream();
 
+        var rpt = new fluentReports.Report(pipeStream,({fontSize: 9}))
+        // .titleHeader("Device Scans")
+        // .titleheader(titleheader)
+        .margins(40)
+        .data(reportData)
+        .pageHeader(header)
         // Tell the engine we are saving rendering it to a stream...
-        const rpt = new fluentReports.Report(pipeStream)
-            .margins(70)
-                .autoPrint(false) // Optional
-                .titleheader(titleheader)
-                .pageHeader(header)
-                .pageFooter(footer) // Optional
-                .data( reportData )	// REQUIRED
-                .totalFormatter( totalFormatter ) // Optional
 
-                rpt.groupBy( "Month" )
-                .header(MonthHeader)
+        const rpt2 = new fluentReports.Report(rpt, ({isSibling: true}))
+            .margins(40)
+            .autoPrint(false) // Optional
+            .pageHeader(header2)
+            .data( reportData )	// REQUIRED
+            .totalFormatter( totalFormatter ) // Optional
 
-                rpt.groupBy( "Category" )
-                .footer(CategoryFooter)
-                .max("Category")
-                .sum('Quantity')
-                .sum('TotalRetail')
+            rpt2.groupBy( "Month" )
+            .header(MonthHeader2)
+            .footer(MonthFooter2)
+            .sum('Quantity')
+            .sum('TotalRetail')
 
+
+            rpt2.groupBy( "Category" )
+            .footer(CategoryFooter2)
+            // .max("Category")
+            .sum('Quantity')
+            .sum('TotalRetail')
+            
+
+        const rpt3 = new fluentReports.Report(rpt, ({isSibling: true}))
+            .margins(40)
+            .autoPrint(false) // Optional
+            // .titleheader(titleheader)
+            // .pageHeader(header)
+            // .pageFooter(footer) // Optional
+            .data( reportData )	// REQUIRED
+            .totalFormatter( totalFormatter ) // Optional
+
+            rpt3.groupBy( "Month" )
+            .header(MonthHeader3)
+            .footer(MonthFooter3)
+            .sum('Quantity')
+            .sum('TotalRetail')
+
+
+            rpt3.groupBy( "ProductName" )
+            .footer(CategoryFooter3)
+            // .max("Category")
+            .sum('Quantity')
+            .sum('TotalRetail')
 
         // Optional Debug output is always nice (to help you see the structure of the report in the console)
         rpt.printStructure(true);
@@ -348,7 +416,7 @@
         // });
 
         // You can also just do this below rather than adding the additional code above which outputs to the console how much time it took to render the report
-        rpt.render(displayReport);
+        rpt3.render(displayReport);
 
     }
 

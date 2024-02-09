@@ -21588,7 +21588,10 @@ module.exports = function whichTypedArray(value) {
                         }
                         break;
                     case mathTypes.COUNT:
-                        this._totals[field]++;
+                        if(currentData[srcField] != null){
+                          this._totals[field]++;
+
+                        }
                         break;
                     default:
                         Report.error("REPORTAPI: Math expression id is wrong", this._math[i][0], " on ", field);

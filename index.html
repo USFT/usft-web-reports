@@ -6,9 +6,11 @@
     <title>FluentReport Browser Test</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel='stylesheet' href='/stylesheets/style.css' />
-    <script src="fluentReportsBrowser.min.js"></script>
+    <!-- <script src="fluentReportsBrowser.min.js"></script> -->
+    <script src="fluentReportsBrowser.js"></script>
     <script type="text/javascript" src="./javascripts/getdata.js"></script>
     <script type="text/javascript" src="./javascripts/reportsettings.js"></script>
+    <script type="text/javascript" src="./javascripts/reporttypes.js"></script>
     <style type="text/css" media="screen">
         #fluentReportsError {
             background-color: red;
@@ -19,29 +21,22 @@
     </style>
 </head>
 
-<body onload="clearStuff()">
+<body >
     <div class="centered">
         <h1>Welcome to USFT Web Sales Reports</h1>
 
     </div>
     <div class="flex-box">
         <div class="one-third">
-            <div id="fluentReportsError">
-                <br>
-                If you are seeing this, this means that the <font color="yellow">"fluentReportsBrowser.min.js"</font> file was
-                not copied into this directory to be used. Please copy this file from the "../generator" directory to use this
-                example.
-                <br><br>
-            </div>
-            <form id="reportForm" onsubmit="return false" class="form-signin full-width text-center">
                 <h1 class="h3 mb-3 font-weight-normal">Select the desired Criteria</h1>
                 <label for="report">Choose a report:</label>
-                <select name="report" id="report" onchange="updateFormAction()">
+                <select name="report" id="report" onchange="setPickerOptions()"> 
                     <option value="ServiceAgreements">Service Agreements</option>
-                    <option value="demo2">demo2</option>
-                    <option value="mercedes">Mercedes</option>
-                    <option value="audi">Audi</option>
+                    <option value="ByCategory">By Catgory</option>
+                    <option value="ByProduct">By Product</option>
+                    <option value="Combined">Category/Product</option>
                 </select>
+            <form id="reportForm" onsubmit="startReport();return false" class="form-signin full-width text-center">
 
                 <div class="dateEntry">
                     <label for="startDate">Enter start date:</label>
@@ -51,7 +46,16 @@
                     <label for="endDate">Enter end date:</label>
                     <input type="date" id="endDate" name="endDate" placeholder="End Date" required>
                 </div>
-                <button class="btn btn-lg btn-primary btn-block" type="submit" onclick="startReport('ServiceAgreements'); ">Run Report</button>
+
+                <button class="btn btn-lg btn-primary btn-block" type="submit"  >Run Report</button>
+            </form>
+            <form id="combinedReportForm" class="combRep" onsubmit="startReport();return false" class="form-signin full-width text-center">
+                <div id="selMonth" class="monthEntry">
+                    <label for="reportMonth">Select Month:</label>
+                    <input type="month" id="reportMonth" name="reportMonth" placeholder="Start Date" required>
+                </div>
+
+                <button class="btn btn-lg btn-primary btn-block" type="submit"  >Run Report</button>
             </form>
 
         </div>
@@ -59,7 +63,7 @@
             <div>Report Generator</div>
             <div id="fluentReportsEditor"></div>
             <div id="fluentReport" class="full-height">
-                <iframe id="iframe" width="100%" height="100%" style="display:none"></iframe>
+                <iframe id="iframe" width="100%" height="100%"></iframe>
             </div>
             <pre id="results"></pre>
 

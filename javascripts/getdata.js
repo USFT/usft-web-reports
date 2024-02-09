@@ -23,3 +23,16 @@ function getDataFromNodeCall(routeMethod, routeID, paramObj) {
         request.send(JSON.stringify(RequestObj));
     })
 }
+function setPickerOptions(){
+    let chosen = document.getElementById('report').value;
+    let cForm = document.getElementById('combinedReportForm');
+    let rForm = document.getElementById('reportForm');
+    if(chosen === 'Combined'){
+        cForm.style.display = 'block'
+        rForm.style.display = 'none'
+    }else{
+        cForm.style.display = 'none'
+        rForm.style.display = 'block'
+        
+    }
+}

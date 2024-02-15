@@ -3,25 +3,38 @@ class ServiceAgreementReport {
         // We need a stream for the report to be generated to...
         const pipeStream = new fluentReports.BlobStream();
 
-        const rpt = new fluentReports.Report(pipeStream,({fontSize: 9}))
-        .margins(40)
-            // .titleheader(this.titleheader)
-            .pageHeader(this.header)
-            .data(reportData)
-            .detail(this.detail)
-            .count('Discounted')
-            .finalSummary(this.finalSummary)// Optional
+        if(reportData.length === 0){
+            const rpt = new fluentReports.Report(pipeStream,({fontSize: 9}))
+            .margins(40)
+                .pageHeader(this.nodata)
+                .data(reportData)
+            rpt.render(displayReport);
+            return rpt;
+        }else{
+            const rpt = new fluentReports.Report(pipeStream,({fontSize: 9}))
+            .margins(40)
+                // .titleheader(this.titleheader)
+                .pageHeader(this.header)
+                .data(reportData)
+                .detail(this.detail)
+                .count('Discounted')
+                .finalSummary(this.finalSummary)// Optional
 
-            rpt.groupBy( "Month" )
-            .header(this.MonthHeader)
-            .count('Discounted')
-            .footer(this.MonthFooter)
+                rpt.groupBy( "Month" )
+                .header(this.MonthHeader)
+                .count('Discounted')
+                .footer(this.MonthFooter)
 
-            rpt.groupBy( "Day" )
-            .header(this.DayHeader)
+                rpt.groupBy( "Day" )
+                .header(this.DayHeader)
 
-            rpt.groupBy("ExternalTranID")
-            .header(this.TransactionHeader)
+                rpt.groupBy("ExternalTranID")
+                .header(this.TransactionHeader)
+            rpt.render(displayReport);
+            return rpt;
+
+        }
+
             
             // .pageFooter(this.footer);
 
@@ -37,13 +50,25 @@ class ServiceAgreementReport {
         // });
 
         // You can also just do this below rather than adding the additional code above which outputs to the console how much time it took to render the report
-        rpt.render(displayReport);
-        return rpt;
 
     }
 
     // methods
     // These are the function that will be run to generate the report.
+    nodata = function(rpt){
+        rpt.pageNumber({text: "Page {0} of {1}",  align: "right"});
+        rpt.printedAt({text: "Printed {3} At: {0}:{1}{2} ",  align: "left"});
+        rpt.newLine(3)
+        rpt.print("USFT Service Agreements", {align: "center", fontSize: 13, fontBold: true})
+        rpt.newLine(3)
+        rpt.print("No Service Agreements sold for selected date range", {align: "center", fontSize: 13, fontBold: true})
+        
+        // x.band([
+        //     {data: "No Service Agreements", width: 45, align: 1},
+        // ], {x: 40, border: 1, width: 0});
+        
+    }
+
     detail = function(x, r, s){
         x.band([
             {data: r.Quantity, width: 45, align: 1},
@@ -57,11 +82,13 @@ class ServiceAgreementReport {
         rpt.newLine()
         
     }
-    header = function(rpt){
+    header = function(rpt, d){
         rpt.pageNumber({text: "Page {0} of {1}",  align: "right"});
         rpt.printedAt({text: "Printed {3} At: {0}:{1}{2} ",  align: "left"});
         rpt.newLine(3)
         rpt.print("USFT Service Agreements", {align: "center", fontSize: 13, fontBold: true})
+        rpt.print(`${d.StartDate} to ${d.EndDate}`, {align: "center", fontSize: 13, fontBold: true})
+
     }
 
     MonthHeader = function(x, r){
@@ -98,16 +125,16 @@ class ServiceAgreementReport {
         ], {x: 40});
         x.fontNormal();
         x.bandLine(1);
-        x.newline()
 
 
     };
     TransactionHeader = function(x, r){
+        x.newline()
         if (r.FirstName) {
             x.band([
                 {data: r.FirstName + ' ' + r.LastName, width: 150},
-                {data: `Phone: ${r.Phone}`, width: 150},
-                {data: `Email: ${r.Email}`, width: 150}
+                {data: `Phone: ${r.Phone}`, width: 110},
+                {data: `Email: ${r.Email}`, width: 190}
             ], {x: 50});
         }
         if (r.CompanyName) {
@@ -201,11 +228,13 @@ class ByCategoryReport{
         rpt.newLine()
         
     }
-    header = function(rpt){
+    header = function(rpt, d){
         rpt.pageNumber({text: "Page {0} of {1}",  align: "right"});
         rpt.printedAt({text: "Printed {3} At: {0}:{1}{2} ",  align: "left"});
         rpt.newLine(3)
         rpt.print("USFT Web Sales by Category", {align: "center", fontSize: 13, fontBold: true})
+        rpt.print(`${d.StartDate} to ${d.EndDate}`, {align: "center", fontSize: 13, fontBold: true})
+
     }
     MonthHeader = function(x, r){
         x.newLine(2)
@@ -261,7 +290,8 @@ class ByCategoryReport{
                     continue;
                 }
                 // Simple Stupid Money formatter.  It is fairly dumb.  ;-)
-                let money = data[key].toString();
+                let money = data[key].toFixed(2);
+                money = money.toString();
                 const idx = money.indexOf('.');
                 if (idx === -1) {
                     money += ".00";
@@ -356,11 +386,12 @@ class ByProductReport{
         rpt.newLine()
         
     }
-    header = function(rpt){
+    header = function(rpt, d){
         rpt.pageNumber({text: "Page {0} of {1}",  align: "right"});
         rpt.printedAt({text: "Printed {3} At: {0}:{1}{2} ",  align: "left"});
         rpt.newLine(3)
         rpt.print("USFT Web Sales by Product", {align: "center", fontSize: 13, fontBold: true})
+        rpt.print(`${d.StartDate} to ${d.EndDate}`, {align: "center", fontSize: 13, fontBold: true})
         
     }
     MonthHeader = function(x, r){
@@ -415,7 +446,8 @@ class ByProductReport{
                     continue;
                 }
                 // Simple Stupid Money formatter.  It is fairly dumb.  ;-)
-                let money = data[key].toString();
+                let money = data[key].toFixed(2);
+                money = money.toString();
                 const idx = money.indexOf('.');
                 if (idx === -1) {
                     money += ".00";
@@ -426,7 +458,8 @@ class ByProductReport{
                     money = money.substring(0, money.length - i) + "," + money.substring(money.length - i);
                 }
 
-                data[key] = '$ ' + money;
+                data[key] = '$ ' + money
+                console.log('$ ' + money)
 
             }
         }
@@ -601,7 +634,8 @@ class CombinedReport{
                     continue;
                 }
                 // Simple Stupid Money formatter.  It is fairly dumb.  ;-)
-                let money = data[key].toString();
+                let money = data[key].toFixed(2);
+                money = money.toString();
                 const idx = money.indexOf('.');
                 if (idx === -1) {
                     money += ".00";

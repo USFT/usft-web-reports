@@ -201,6 +201,13 @@
 	}
                 ];
 
+    // const extTran = reportData.map(({externalTransactionId}) => externalTransactionId);
+    // const filtered = reportData.filter(({externalTransactionId}, index) => !extTran.includes(externalTransactionId, index + 1));
+    // console.log(filtered)
+
+    const totSalesData = reportData.filter((obj, index) => {
+        return index === reportData.findIndex(o => obj.externalTransactionId === o.externalTransactionId);
+    });
 
         // let titleheader = function(rpt){
         //     rpt.print("USFT Web Sales by Product", {align: "center", fontSize: 13, fontBold: true})
@@ -276,7 +283,8 @@
                         continue;
                     }
                     // Simple Stupid Money formatter.  It is fairly dumb.  ;-)
-                    let money = data[key].toString();
+                    let money = data[key].toFixed(2);
+                    money = money.toString();
                     const idx = money.indexOf('.');
                     if (idx === -1) {
                         money += ".00";
@@ -345,6 +353,18 @@
         r.newLine()
         };
 
+        let MonthFooter1 = function (r,d) {
+            r.bandLine(1);
+
+            r.band([
+                // [d.Category, 270],
+                // ["Total items:  " + r.totals.Quantity, 315, 3],
+                // ["Total sales:  " + r.totals.TotalRetail, 155, 3],
+                // {data: "Total items:  " + r.totals.Quantity, width: 315, align: 3},
+                {data: "Total sales:  " + r.totals.totalSale, width: 155, align: 3},
+            ], {x: 30});
+            r.newLine()
+        };
 
 
 
@@ -359,6 +379,13 @@
         .data(reportData)
         .pageHeader(header)
         // Tell the engine we are saving rendering it to a stream...
+
+        const rpt1 = new fluentReports.Report(rpt, ({isSibling: true}))
+            .data( totSalesData )	// REQUIRED
+            .groupBy("externalTranID")
+            .sum("totalSale")
+            .footer(MonthFooter1)
+            .totalFormatter( totalFormatter ) // Optional
 
         const rpt2 = new fluentReports.Report(rpt, ({isSibling: true}))
             .margins(40)
@@ -403,6 +430,7 @@
             .sum('Quantity')
             .sum('TotalRetail')
 
+            
         // Optional Debug output is always nice (to help you see the structure of the report in the console)
         rpt.printStructure(true);
 

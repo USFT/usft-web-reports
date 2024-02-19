@@ -459,7 +459,6 @@ class ByProductReport{
                 }
 
                 data[key] = '$ ' + money
-                console.log('$ ' + money)
 
             }
         }
@@ -495,6 +494,8 @@ class CombinedReport{
         // We need a stream for the report to be generated to...
         const pipeStream = new fluentReports.BlobStream();
 
+        let prodData = reportData.sort(rankingSorter('MonthNum', 'SKUIndex'));
+
         // Tell the engine we are saving rendering it to a stream...
         const rpt = new fluentReports.Report(pipeStream,({fontSize: 9}))
             .margins(40)
@@ -525,8 +526,9 @@ class CombinedReport{
         const rpt3 = new fluentReports.Report(rpt, ({isSibling: true}))
             .margins(40)
             .autoPrint(false) // Optional
-            .data( reportData )	// REQUIRED
-            .totalFormatter( this.totalFormatter ) // Optional
+            // .data( reportData )	// REQUIRED
+            .data( prodData )	// REQUIRED
+           .totalFormatter( this.totalFormatter ) // Optional
 
             rpt3.groupBy( "Month" )
             .header(this.MonthHeader3)

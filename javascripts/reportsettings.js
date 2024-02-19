@@ -46,7 +46,7 @@
                 case 'ByProduct':
 
                     await getDataFromNodeCall('POST', '/commerce/getTranDetails', requestBody).then(function(data){
-                        reportData = data
+                        reportData = data.sort(rankingSorter('MonthNum', 'SKUIndex'));
                         let ProdReport = new ByProductReport()
                     })
                     
@@ -67,7 +67,24 @@
         }
     }
 
-
+    function rankingSorter(firstKey, secondKey) {
+        return function(a, b) {  
+            if (a[firstKey] < b[firstKey]) {  
+                return -1;  
+            } else if (a[firstKey] > b[firstKey]) {  
+                return 1;  
+            }  
+            else {
+                if (a[secondKey] > b[secondKey]) {  
+                    return 1;  
+                } else if (a[secondKey] < b[secondKey]) {  
+                    return -1;  
+                } else {
+                    return 0;
+                }
+            } 
+        }  
+    }
     function getLastDayOfMonth(year, month) {
         let date = new Date(year, month + 1, 0);
         return date.getDate();

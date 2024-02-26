@@ -30,6 +30,7 @@ class ServiceAgreementReport {
 
                 rpt.groupBy("ExternalTranID")
                 .header(this.TransactionHeader)
+
             rpt.render(displayReport);
             return rpt;
 
@@ -87,7 +88,7 @@ class ServiceAgreementReport {
         rpt.printedAt({text: "Printed {3} At: {0}:{1}{2} ",  align: "left"});
         rpt.newLine(3)
         rpt.print("USFT Service Agreements", {align: "center", fontSize: 13, fontBold: true})
-        rpt.print(`${d.StartDate} to ${d.EndDate}`, {align: "center", fontSize: 13, fontBold: true})
+        // rpt.print(`${d.StartDate} to ${d.EndDate}`, {align: "center", fontSize: 13, fontBold: true})
 
     }
 
@@ -233,7 +234,7 @@ class ByCategoryReport{
         rpt.printedAt({text: "Printed {3} At: {0}:{1}{2} ",  align: "left"});
         rpt.newLine(3)
         rpt.print("USFT Web Sales by Category", {align: "center", fontSize: 13, fontBold: true})
-        rpt.print(`${d.StartDate} to ${d.EndDate}`, {align: "center", fontSize: 13, fontBold: true})
+        // rpt.print(`${d.StartDate} to ${d.EndDate}`, {align: "center", fontSize: 13, fontBold: true})
 
     }
     MonthHeader = function(x, r){
@@ -391,7 +392,7 @@ class ByProductReport{
         rpt.printedAt({text: "Printed {3} At: {0}:{1}{2} ",  align: "left"});
         rpt.newLine(3)
         rpt.print("USFT Web Sales by Product", {align: "center", fontSize: 13, fontBold: true})
-        rpt.print(`${d.StartDate} to ${d.EndDate}`, {align: "center", fontSize: 13, fontBold: true})
+        // rpt.print(`${d.StartDate} to ${d.EndDate}`, {align: "center", fontSize: 13, fontBold: true})
         
     }
     MonthHeader = function(x, r){
